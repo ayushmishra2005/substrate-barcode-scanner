@@ -1,11 +1,10 @@
 [package]
-authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
-description = 'FRAME pallet template for defining custom runtime logic.'
+authors = ['Ayush Kumar Mishra <https://github.com/ayushmishra2005>']
+description = 'FRAME pallet for defining barcode scanner logic.'
 edition = '2018'
-homepage = 'https://substrate.dev'
 license = 'Unlicense'
-name = 'pallet-template'
-repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
+name = 'pallet-barcode-scanner'
+repository = 'https://github.com/ayushmishra2005/substrate-barcode-scanner'
 version = '2.0.1'
 
 [package.metadata.docs.rs]
