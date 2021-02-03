@@ -404,6 +404,7 @@ dependencies = [
 name = "barcode-scanner-runtime"
 version = "2.0.1"
 dependencies = [
+ "barcode-scanner-runtime-api",
  "frame-benchmarking",
  "frame-executive",
  "frame-support",
@@ -434,6 +435,14 @@ dependencies = [
  "sp-transaction-pool",
  "sp-version",
  "substrate-wasm-builder",
+]
+
+[[package]]
+name = "barcode-scanner-runtime-api"
+version = "2.0.1"
+dependencies = [
+ "parity-scale-codec",
+ "sp-api",
 ]
 
 [[package]]
