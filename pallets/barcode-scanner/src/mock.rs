@@ -1,10 +1,14 @@
-use crate::{Module, Trait};
-use sp_core::H256;
-use frame_support::{impl_outer_origin, parameter_types, weights::Weight};
-use sp_runtime::{
-	traits::{BlakeTwo256, IdentityLookup}, testing::Header, Perbill,
-};
+use frame_support::{impl_outer_origin, ord_parameter_types, parameter_types, weights::Weight};
 use frame_system as system;
+use sp_core::H256;
+use sp_runtime::{
+	testing::Header,
+	traits::{BlakeTwo256, IdentityLookup},
+	Perbill,
+};
+use system::EnsureSignedBy;
+
+use crate::{Module, Trait};
 
 impl_outer_origin! {
 	pub enum Origin for Test {}
@@ -49,8 +53,13 @@ impl system::Trait for Test {
 	type SystemWeightInfo = ();
 }
 
+ord_parameter_types! {
+    pub const Six: u64 = 6;
+}
+
 impl Trait for Test {
 	type Event = ();
+	type ManufactureOrigin = EnsureSignedBy<Six, u64>;
 }
 
 pub type TemplateModule = Module<Test>;

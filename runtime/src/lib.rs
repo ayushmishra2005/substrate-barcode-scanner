@@ -264,6 +264,7 @@ impl pallet_sudo::Trait for Runtime {
 /// Configure the template pallet in pallets/template.
 impl pallet_barcode_scanner::Trait for Runtime {
 	type Event = Event;
+	type ManufactureOrigin = frame_system::EnsureSigned<AccountId>;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
@@ -282,7 +283,7 @@ construct_runtime!(
 		TransactionPayment: pallet_transaction_payment::{Module, Storage},
 		Sudo: pallet_sudo::{Module, Call, Config<T>, Storage, Event<T>},
 		// Include the custom logic from the template pallet in the runtime.
-		BarcodeScannerPallet: pallet_barcode_scanner::{Module, Call, Storage, Event<T>},
+		BarcodeScanner: pallet_barcode_scanner::{Module, Call, Storage, Event<T>},
 	}
 );
 
