@@ -447,7 +447,7 @@ impl_runtime_apis! {
 		}
 	}
 
-	impl barcode_scanner_runtime_api::VerifyBarcodeApi<Block, Hash> for Runtime {
+	impl barcode_scanner_runtime_api::BarcodeScannerApi<Block, Hash> for Runtime {
 		fn is_valid_barcode(barcode: Hash) -> bool {
 			BarcodeScanner::is_valid_barcode(barcode)
 		}

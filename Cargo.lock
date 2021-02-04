@@ -401,6 +401,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "barcode-scanner-rpc"
+version = "2.0.1"
+dependencies = [
+ "barcode-scanner-runtime-api",
+ "jsonrpc-core",
+ "jsonrpc-core-client",
+ "jsonrpc-derive",
+ "parity-scale-codec",
+ "sp-api",
+ "sp-blockchain",
+ "sp-rpc",
+ "sp-runtime",
+]
+
+[[package]]
 name = "barcode-scanner-runtime"
 version = "2.0.1"
 dependencies = [
@@ -3568,6 +3583,7 @@ dependencies = [
 name = "node-barcode-scanner"
 version = "2.0.1"
 dependencies = [
+ "barcode-scanner-rpc",
  "barcode-scanner-runtime",
  "frame-benchmarking",
  "frame-benchmarking-cli",

@@ -23,6 +23,7 @@ structopt = '0.3.8'
 
 # local dependencies
 barcode-scanner-runtime = { path = '../runtime', version = '2.0.1' }
+barcode-scanner-rpc = { path = '../pallets/barcode-scanner/rpc', version = '2.0.1' }
 
 # Substrate dependencies
 frame-benchmarking = '2.0.1'
