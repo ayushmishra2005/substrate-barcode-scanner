@@ -3823,6 +3823,7 @@ dependencies = [
 name = "pallet-barcode-scanner"
 version = "2.0.1"
 dependencies = [
+ "frame-benchmarking",
  "frame-support",
  "frame-system",
  "parity-scale-codec",

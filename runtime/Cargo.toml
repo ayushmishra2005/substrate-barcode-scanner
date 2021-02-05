@@ -66,6 +66,7 @@ runtime-benchmarks = [
     'pallet-balances/runtime-benchmarks',
     'pallet-timestamp/runtime-benchmarks',
     'sp-runtime/runtime-benchmarks',
+    'pallet-barcode-scanner/runtime-benchmarks',
 ]
 std = [
     'codec/std',

@@ -77,3 +77,8 @@ Purge the development chain's state:
 You will get below response.
 
 `{"jsonrpc":"2.0","result":true,"id":1}`
+
+
+### Run Benchmarking
+Run `make benchmark` command and execute
+./target/release/node-barcode-scanner benchmark --chain=dev --execution=wasm --wasm-execution=compiled --pallet=pallet_barcode_scanner --extrinsic='*' --steps=50 --repeat=20 --heap-pages=4096  --output=./pallets/barcode-scanner/src/weights.rs

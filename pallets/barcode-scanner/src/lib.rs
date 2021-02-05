@@ -12,6 +12,7 @@ mod mock;
 
 #[cfg(test)]
 mod tests;
+mod banchmarking;
 
 pub trait Trait: frame_system::Trait {
 	type Event: From<Event<Self>> + Into<<Self as frame_system::Trait>::Event>;
@@ -60,7 +61,7 @@ decl_module! {
 		// Events must be initialized if they are used by the pallet.
 		fn deposit_event() = default;
 
-		#[weight = 10_000]
+		#[weight = 10000]
         fn add_product(origin, barcode: T::Hash, name: Vec<u8>, id: T::Hash) -> DispatchResult {
 
             // The dispatch origin of this call must be `ManufactureOrigin`.
