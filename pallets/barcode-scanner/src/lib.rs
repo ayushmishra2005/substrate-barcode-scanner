@@ -13,10 +13,13 @@ mod mock;
 #[cfg(test)]
 mod tests;
 mod banchmarking;
+mod weights;
+pub use weights::WeightInfo;
 
 pub trait Config: frame_system::Config {
 	type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
 	type ManufactureOrigin: EnsureOrigin<Self::Origin, Success = Self::AccountId>;
+	type WeightInfo: WeightInfo;
 }
 
 #[derive(Encode, Decode, Clone, Default, Eq, PartialEq, Debug)]
@@ -65,7 +68,7 @@ decl_module! {
 		// Events must be initialized if they are used by the pallet.
 		fn deposit_event() = default;
 
-		#[weight = 10000]
+		#[weight = T::WeightInfo::add_product()]
         fn add_product(origin, barcode: T::Hash, name: Vec<u8>, id: T::Hash) -> DispatchResult {
 
             // The dispatch origin of this call must be `ManufactureOrigin`.

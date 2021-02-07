@@ -2,75 +2,70 @@
 // `construct_runtime!` does a lot of recursion and requires us to increase the limit to 256.
 #![recursion_limit="256"]
 
-use codec::{Encode, Decode};
-use sp_runtime::traits::{
-	self,  StaticLookup, SaturatedConversion,
+use codec::Encode;
+pub use frame_support::{
+	construct_runtime, debug, parameter_types, StorageValue,
+	traits::{KeyOwnerProofSystem, Randomness, U128CurrencyToVote},
+	weights::{
+		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight, WEIGHT_PER_SECOND}, DispatchClass,
+		IdentityFee, Weight,
+	},
+};
+use pallet_transaction_payment::{FeeDetails, RuntimeDispatchInfo};
+
+pub use frame_system::{
+	EnsureOneOf, EnsureRoot,
+	limits::{BlockLength, BlockWeights}
 };
 #[cfg(any(feature = "std", test))]
-use pallet_transaction_payment::{FeeDetails, RuntimeDispatchInfo};
-pub use pallet_transaction_payment::{Multiplier, TargetedFeeAdjustment, CurrencyAdapter};
-
-#[cfg(any(feature = "std", test))]
 pub use frame_system::Call as SystemCall;
+pub use node_primitives::{AccountId, Signature};
+use node_primitives::{AccountIndex, Balance, BlockNumber, Hash, Index};
+use node_primitives::Moment;
+pub use pallet_balances::Call as BalancesCall;
+use pallet_grandpa::{AuthorityId as GrandpaId, AuthorityList as GrandpaAuthorityList};
+use pallet_grandpa::fg_primitives;
+use pallet_session::historical as pallet_session_historical;
 #[cfg(any(feature = "std", test))]
 pub use pallet_staking::StakerStatus;
+pub use pallet_timestamp::Call as TimestampCall;
+pub use pallet_transaction_payment::{CurrencyAdapter, Multiplier, TargetedFeeAdjustment};
+use sp_api::impl_runtime_apis;
+use sp_authority_discovery::AuthorityId as AuthorityDiscoveryId;
+use sp_core::{
+	crypto::KeyTypeId,
+	OpaqueMetadata,
+	u32_trait::{_3, _4},
+};
+use sp_runtime::{
+	ApplyExtrinsicResult, create_runtime_str, FixedPointNumber, generic, impl_opaque_keys, Perquintill,
+	transaction_validity::{TransactionPriority, TransactionSource, TransactionValidity},
+};
+pub use sp_runtime::{Perbill, Permill};
+// A few exports that help ease life for downstream crates.
+#[cfg(any(feature = "std", test))]
+pub use sp_runtime::BuildStorage;
+use sp_runtime::curve::PiecewiseLinear;
+use sp_runtime::generic::Era;
+use sp_runtime::traits::{
+	self, SaturatedConversion, StaticLookup,
+};
+use sp_runtime::traits::{
+	BlakeTwo256, Block as BlockT, NumberFor, OpaqueKeys, Saturating, Verify,
+};
+use sp_std::prelude::*;
+#[cfg(feature = "std")]
+use sp_version::NativeVersion;
+use sp_version::RuntimeVersion;
 
+use constants::{currency::*, time::*};
+/// Import the template pallet.
+pub use pallet_barcode_scanner;
 
 // Make the WASM binary available.
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
-use sp_std::prelude::*;
-use sp_core::{
-	crypto::KeyTypeId,
-	u32_trait::{ _3, _4},
-	OpaqueMetadata,
-};
-use sp_runtime::{
-	ApplyExtrinsicResult, generic, create_runtime_str, impl_opaque_keys,
-	transaction_validity::{TransactionValidity, TransactionSource, TransactionPriority},
-};
-use sp_runtime::traits::{
-	BlakeTwo256, Block as BlockT, Verify, NumberFor, Saturating, OpaqueKeys,
-};
-use sp_runtime::curve::PiecewiseLinear;
-
-use pallet_im_online::sr25519::AuthorityId as ImOnlineId;
-use sp_authority_discovery::AuthorityId as AuthorityDiscoveryId;
-use sp_api::impl_runtime_apis;
-use pallet_grandpa::{AuthorityId as GrandpaId, AuthorityList as GrandpaAuthorityList};
-use pallet_grandpa::fg_primitives;
-use sp_version::RuntimeVersion;
-#[cfg(feature = "std")]
-use sp_version::NativeVersion;
-
-// A few exports that help ease life for downstream crates.
-#[cfg(any(feature = "std", test))]
-pub use sp_runtime::BuildStorage;
-pub use pallet_timestamp::Call as TimestampCall;
-pub use pallet_balances::Call as BalancesCall;
-pub use sp_runtime::{Permill, Perbill};
-use sp_runtime::generic::Era;
-pub use frame_support::{
-	construct_runtime, parameter_types, StorageValue, debug,
-	traits::{KeyOwnerProofSystem, Randomness, U128CurrencyToVote},
-	weights::{
-		Weight, IdentityFee,
-		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight, WEIGHT_PER_SECOND}, DispatchClass,
-	},
-};
-use frame_support::traits::InstanceFilter;
-use node_primitives::Moment;
-use pallet_session::{historical as pallet_session_historical};
-
-pub use frame_system::{
-	EnsureRoot, EnsureOneOf,
-	limits::{BlockWeights, BlockLength}
-};
-/// Import the template pallet.
-pub use pallet_barcode_scanner;
-pub use node_primitives::{AccountId, Signature};
-use node_primitives::{AccountIndex, Balance, BlockNumber, Hash, Index};
 /// Digest item type.
 pub type DigestItem = generic::DigestItem<Hash>;
 
@@ -79,9 +74,9 @@ pub type DigestItem = generic::DigestItem<Hash>;
 /// of data like extrinsics, allowing for them to continue syncing the network through upgrades
 /// to even the core data structures.
 pub mod opaque {
-	use super::*;
-
 	pub use sp_runtime::OpaqueExtrinsic as UncheckedExtrinsic;
+
+	use super::*;
 
 	/// Opaque block header type.
 	pub type Header = generic::Header<BlockNumber, BlakeTwo256>;
@@ -99,7 +94,12 @@ pub mod opaque {
 
 /// Constant values used within the runtime.
 pub mod constants;
-use constants::{time::*, currency::*};
+#[cfg(feature = "std")]
+pub fn wasm_binary_unwrap() -> &'static [u8] {
+	WASM_BINARY.expect("Development wasm binary is not available. This means the client is \
+						built with `SKIP_WASM_BUILD` flag and it is only usable for \
+						production chains. Please rebuild with the flag disabled.")
+}
 
 pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("node-template"),
@@ -181,7 +181,7 @@ impl frame_system::Config for Runtime {
 	/// The aggregated dispatch type that is available for extrinsics.
 	type Call = Call;
 	/// The lookup mechanism to get account ID from whatever is passed in dispatchers.
-	type Lookup = multiaddress::AccountIdLookup<AccountId, ()>;
+	type Lookup = Indices;
 	/// The index type for storing how many extrinsics an account has signed.
 	type Index = Index;
 	/// The index type for blocks.
@@ -305,10 +305,6 @@ impl pallet_balances::Config for Runtime {
 	type ExistentialDeposit = ExistentialDeposit;
 	type AccountStore = System;
 	type WeightInfo = ();
-}
-
-parameter_types! {
-	pub const TransactionByteFee: Balance = 1;
 }
 
 impl pallet_sudo::Config for Runtime {
@@ -476,7 +472,7 @@ impl pallet_authorship::Config for Runtime {
 	type FindAuthor = pallet_session::FindAccountFromAuthorIndex<Self, Babe>;
 	type UncleGenerations = UncleGenerations;
 	type FilterUncle = ();
-	type EventHandler = (Staking, ImOnline);
+	type EventHandler = Staking;
 }
 impl frame_system::offchain::SigningTypes for Runtime {
 	type Public = <Signature as Verify>::Signer;
@@ -493,7 +489,6 @@ impl<LocalCall> frame_system::offchain::CreateSignedTransaction<LocalCall> for R
 		account: AccountId,
 		nonce: Index,
 	) -> Option<(Call, <UncheckedExtrinsic as traits::Extrinsic>::SignaturePayload)> {
-		let tip = 0;
 		// take the biggest period possible.
 		let period = BlockHashCount::get()
 			.checked_next_power_of_two()
@@ -512,7 +507,6 @@ impl<LocalCall> frame_system::offchain::CreateSignedTransaction<LocalCall> for R
 			frame_system::CheckEra::<Runtime>::from(era),
 			frame_system::CheckNonce::<Runtime>::from(nonce),
 			frame_system::CheckWeight::<Runtime>::new(),
-			pallet_transaction_payment::ChargeTransactionPayment::<Runtime>::from(tip),
 		);
 		let raw_payload = SignedPayload::new(call, extra)
 			.map_err(|e| {
@@ -536,17 +530,20 @@ impl<C> frame_system::offchain::SendTransactionTypes<C> for Runtime where
 	type OverarchingCall = Call;
 }
 
-impl pallet_im_online::Config for Runtime {
-	type AuthorityId = ImOnlineId;
-	type Event = Event;
-	type SessionDuration = SessionDuration;
-	type ReportUnresponsiveness = Offences;
-	type UnsignedPriority = ImOnlineUnsignedPriority;
-	type WeightInfo = pallet_im_online::weights::SubstrateWeight<Runtime>;
+parameter_types! {
+	pub const TransactionByteFee: Balance = 10 * MILLICENTS;
+	pub const TargetBlockFullness: Perquintill = Perquintill::from_percent(25);
+	pub AdjustmentVariable: Multiplier = Multiplier::saturating_from_rational(1, 100_000);
+	pub MinimumMultiplier: Multiplier = Multiplier::saturating_from_rational(1, 1_000_000_000u128);
 }
 
-/// The address format for describing accounts.
-mod multiaddress;
+impl pallet_transaction_payment::Config for Runtime {
+	type OnChargeTransaction = CurrencyAdapter<Balances, ()>;
+	type TransactionByteFee = TransactionByteFee;
+	type WeightToFee = IdentityFee<Balance>;
+	type FeeMultiplierUpdate =
+	TargetedFeeAdjustment<Self, TargetBlockFullness, AdjustmentVariable, MinimumMultiplier>;
+}
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -563,12 +560,11 @@ construct_runtime!(
 		Indices: pallet_indices::{Module, Call, Storage, Config<T>, Event<T>},
 		Staking: pallet_staking::{Module, Call, Config<T>, Storage, Event<T>, ValidateUnsigned},
 		Session: pallet_session::{Module, Call, Storage, Event, Config<T>},
-
+		TransactionPayment: pallet_transaction_payment::{Module, Storage},
 		Council: pallet_collective::<Instance1>::{Module, Call, Storage, Origin<T>, Event<T>, Config<T>},
 		TechnicalCommittee: pallet_collective::<Instance2>::{Module, Call, Storage, Origin<T>, Event<T>, Config<T>},
 		Grandpa: pallet_grandpa::{Module, Call, Storage, Config, Event, ValidateUnsigned},
 		Sudo: pallet_sudo::{Module, Call, Config<T>, Storage, Event<T>},
-		ImOnline: pallet_im_online::{Module, Call, Storage, Event<T>, ValidateUnsigned, Config<T>},
 		AuthorityDiscovery: pallet_authority_discovery::{Module, Call, Config},
 		Offences: pallet_offences::{Module, Call, Storage, Event},
 		Historical: pallet_session_historical::{Module},
@@ -577,7 +573,7 @@ construct_runtime!(
 		BarcodeScanner: pallet_barcode_scanner::{Module, Call, Storage, Event<T>},
 	}
 );
-pub type Address = multiaddress::MultiAddress<AccountId, ()>;
+pub type Address = sp_runtime::MultiAddress<AccountId, AccountIndex>;
 /// Block header type as expected by this runtime.
 pub type Header = generic::Header<BlockNumber, BlakeTwo256>;
 /// Block type as expected by this runtime.
@@ -768,6 +764,17 @@ impl_runtime_apis! {
 			)
 		}
 	}
+	impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<
+		Block,
+		Balance,
+	> for Runtime {
+		fn query_info(uxt: <Block as BlockT>::Extrinsic, len: u32) -> RuntimeDispatchInfo<Balance> {
+			TransactionPayment::query_info(uxt, len)
+		}
+		fn query_fee_details(uxt: <Block as BlockT>::Extrinsic, len: u32) -> FeeDetails<Balance> {
+			TransactionPayment::query_fee_details(uxt, len)
+		}
+	}
 	impl frame_system_rpc_runtime_api::AccountNonceApi<Block, AccountId, Index> for Runtime {
 		fn account_nonce(account: AccountId) -> Index {
 			System::account_nonce(account)
@@ -788,7 +795,7 @@ impl_runtime_apis! {
 			use frame_benchmarking::{Benchmarking, BenchmarkBatch, add_benchmark, TrackedStorageKey};
 
 			use frame_system_benchmarking::Module as SystemBench;
-			impl frame_system_benchmarking::Trait for Runtime {}
+			impl frame_system_benchmarking::Config for Runtime {}
 
 			let whitelist: Vec<TrackedStorageKey> = vec![
 				// Block Number
@@ -817,10 +824,7 @@ impl_runtime_apis! {
 			add_benchmark!(params, batches, pallet_barcode_scanner, BarcodeScanner);
 			add_benchmark!(params, batches, pallet_babe, Babe);
 			add_benchmark!(params, batches, pallet_collective, Council);
-			add_benchmark!(params, batches, pallet_session, SessionBench::<Runtime>);
 			add_benchmark!(params, batches, pallet_staking, Staking);
-			add_benchmark!(params, batches, pallet_offences, OffencesBench::<Runtime>);
-			add_benchmark!(params, batches, pallet_im_online, ImOnline);
 			add_benchmark!(params, batches, pallet_indices, Indices);
 
 			if batches.is_empty() { return Err("Benchmark not found for this pallet.".into()) }
