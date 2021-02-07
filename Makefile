@@ -4,7 +4,7 @@ init:
 
 .PHONY: check
 check:
-	SKIP_WASM_BUILD=1 cargo check --release
+	SKIP_WASM_BUILD=1 cargo +nightly-2020-10-06 check --release
 
 .PHONY: test
 test:
@@ -12,7 +12,7 @@ test:
 
 .PHONY: run
 run:
-	 cargo run --release -- --dev --tmp
+	 cargo +nightly-2020-10-06 run --release -- --dev --tmp
 
 .PHONY: build
 build:
@@ -20,5 +20,5 @@ build:
 
 .PHONY: benchmark
 benchmark:
-	 cargo +nightly-2020-10-06 build --manifest-path node/Cargo.toml --release --features runtime-benchmarks
+	 cargo +nightly-2020-10-06 build --manifest-path node/cli/Cargo.toml --release --features runtime-benchmarks
 

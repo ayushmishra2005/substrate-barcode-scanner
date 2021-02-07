@@ -13,10 +13,13 @@ mod mock;
 #[cfg(test)]
 mod tests;
 mod banchmarking;
+pub mod weights;
+pub use weights::WeightInfo;
 
-pub trait Trait: frame_system::Trait {
-	type Event: From<Event<Self>> + Into<<Self as frame_system::Trait>::Event>;
+pub trait Config: frame_system::Config {
+	type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
 	type ManufactureOrigin: EnsureOrigin<Self::Origin, Success = Self::AccountId>;
+	type WeightInfo: WeightInfo;
 }
 
 #[derive(Encode, Decode, Clone, Default, Eq, PartialEq, Debug)]
@@ -26,10 +29,10 @@ pub struct Product<AccountId, Hash> {
 	manufacturer: AccountId,
 }
 
-pub type ProductOf<T> = Product<<T as frame_system::Trait>::AccountId, <T as frame_system::Trait>::Hash>;
+pub type ProductOf<T> = Product<<T as frame_system::Config>::AccountId, <T as frame_system::Config>::Hash>;
 
 decl_storage! {
-	trait Store for Module<T: Trait> as BarcodeScanner {
+	trait Store for Module<T: Config> as BarcodeScanner {
 		ProductInformation get(fn product_information):
 		map hasher(blake2_128_concat) T::Hash => ProductOf<T>;
 	}
@@ -38,8 +41,8 @@ decl_storage! {
 decl_event!(
 	pub enum Event<T>
     where
-        Hash = <T as frame_system::Trait>::Hash,
-        AccountId = <T as frame_system::Trait>::AccountId,
+        Hash = <T as frame_system::Config>::Hash,
+        AccountId = <T as frame_system::Config>::AccountId,
     {
         /// Product information has been shored.
         ProductInformationStored(AccountId, Hash),
@@ -47,21 +50,25 @@ decl_event!(
 );
 
 decl_error! {
-	pub enum Error for Module<T: Trait> {
+	pub enum Error for Module<T: Config> {
 		/// This barcode already exists in the chain.
         BarcodeAlreadyExists,
 	}
 }
 
 decl_module! {
-	pub struct Module<T: Trait> for enum Call where origin: T::Origin {
+	pub struct Module<T: Config> for enum Call
+	where
+		origin: T::Origin,
+
+	{
 		// Errors must be initialized if they are used by the pallet.
 		type Error = Error<T>;
 
 		// Events must be initialized if they are used by the pallet.
 		fn deposit_event() = default;
 
-		#[weight = 10000]
+		#[weight = T::WeightInfo::add_product()]
         fn add_product(origin, barcode: T::Hash, name: Vec<u8>, id: T::Hash) -> DispatchResult {
 
             // The dispatch origin of this call must be `ManufactureOrigin`.
@@ -87,7 +94,7 @@ decl_module! {
 	}
 }
 
-impl<T: Trait> Module<T> {
+impl<T: Config> Module<T> {
 	pub fn is_valid_barcode(barcode: T::Hash) -> bool {
 		ProductInformation::<T>::contains_key(&barcode)
 	}
