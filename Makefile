@@ -4,7 +4,7 @@ init:
 
 .PHONY: check
 check:
-	SKIP_WASM_BUILD=1 cargo check --release
+	SKIP_WASM_BUILD=1 cargo +nightly-2020-10-06 check --release
 
 .PHONY: test
 test:
