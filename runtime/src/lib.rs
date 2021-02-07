@@ -316,6 +316,7 @@ impl pallet_sudo::Config for Runtime {
 impl pallet_barcode_scanner::Config for Runtime {
 	type Event = Event;
 	type ManufactureOrigin = frame_system::EnsureSigned<AccountId>;
+	type WeightInfo = pallet_barcode_scanner::weights::SubstrateWeight<Runtime>;
 }
 
 parameter_types! {

@@ -13,7 +13,7 @@ mod mock;
 #[cfg(test)]
 mod tests;
 mod banchmarking;
-mod weights;
+pub mod weights;
 pub use weights::WeightInfo;
 
 pub trait Config: frame_system::Config {

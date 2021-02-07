@@ -12,7 +12,7 @@ test:
 
 .PHONY: run
 run:
-	 cargo run --release -- --dev --tmp
+	 cargo +nightly-2020-10-06 run --release -- --dev --tmp
 
 .PHONY: build
 build:
