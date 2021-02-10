@@ -20,5 +20,5 @@ build:
 
 .PHONY: benchmark
 benchmark:
-	 cargo +nightly-2020-10-06 build --manifest-path node/cli/Cargo.toml --release --features runtime-benchmarks
+	 cargo +nightly-2020-10-06 build --manifest-path node/Cargo.toml --release --features runtime-benchmarks
 

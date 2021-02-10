@@ -22,59 +22,40 @@ version = '2.0.0'
 
 [dependencies]
 hex-literal = { optional = true, version = '0.3.1' }
-serde = { version = "1.0.102", optional = true }
-static_assertions = "1.1.0"
+serde = { version = "1.0.101", optional = true }
 
 # local dependencies
 pallet-barcode-scanner = { path = '../pallets/barcode-scanner', default-features = false, version = '2.0.1' }
 barcode-scanner-runtime-api = { path = '../pallets/barcode-scanner/runtime-api', default-features = false, version = '2.0.1' }
 
 # primitives
-sp-authority-discovery = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-sp-consensus-babe = { version = "0.8.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 sp-block-builder = { git = 'https://github.com/paritytech/substrate.git', branch = "master", default-features = false, version = "2.0.0"}
 sp-inherents = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-node-primitives = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 sp-offchain = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 sp-core = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 sp-std = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 sp-api = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 sp-runtime = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-sp-staking = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-sp-keyring = { version = "2.0.0", optional = true, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 sp-session = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 sp-transaction-pool = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 sp-version = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-sp-arithmetic = { git = 'https://github.com/paritytech/substrate.git', branch = "master", default-features = false }
 
 # Substrate dependencies
-pallet-authority-discovery = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 frame-benchmarking = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master", optional = true }
 frame-executive = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 frame-support = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 frame-system = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 frame-system-benchmarking = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master", optional = true }
 frame-system-rpc-runtime-api = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-babe = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
+pallet-aura = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 pallet-balances = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 pallet-grandpa = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 pallet-randomness-collective-flip = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 pallet-sudo = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 pallet-timestamp = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-offences = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-offences-benchmarking = { version = "2.0.0", git = 'https://github.com/paritytech/substrate.git', branch = "master", default-features = false, optional = true }
-pallet-staking = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-staking-reward-curve = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-session = { version = "2.0.0", features = ["historical"],default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-session-benchmarking = { version = "2.0.0", git = 'https://github.com/paritytech/substrate.git', branch = "master", default-features = false, optional = true }
 pallet-transaction-payment = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 pallet-transaction-payment-rpc-runtime-api = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 sp-consensus-aura = { default-features = false, version = '0.8.0', git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-collective = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-im-online = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-authorship = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-contracts-primitives = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-pallet-indices = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 
 
 [features]
@@ -89,41 +70,24 @@ runtime-benchmarks = [
     'pallet-timestamp/runtime-benchmarks',
     'sp-runtime/runtime-benchmarks',
     'pallet-barcode-scanner/runtime-benchmarks',
-    "pallet-babe/runtime-benchmarks",
-    "pallet-offences-benchmarking",
-    "pallet-session-benchmarking",
-    "pallet-staking/runtime-benchmarks",
-    "pallet-offences-benchmarking",
-    "pallet-session-benchmarking",
-    "pallet-collective/runtime-benchmarks",
-    "pallet-im-online/runtime-benchmarks",
-    "pallet-indices/runtime-benchmarks",
 ]
 std = [
-    "sp-authority-discovery/std",
-    "pallet-authority-discovery/std",
     'codec/std',
     'serde',
     'frame-executive/std',
     'frame-support/std',
     'frame-system/std',
     'frame-system-rpc-runtime-api/std',
-    "sp-staking/std",
-    "pallet-collective/std",
-    'pallet-babe/std',
+    'pallet-aura/std',
     'pallet-balances/std',
     'pallet-grandpa/std',
     'pallet-randomness-collective-flip/std',
     'pallet-sudo/std',
-    "pallet-session/std",
-    "pallet-staking/std",
-    "pallet-offences/std",
     'pallet-barcode-scanner/std',
     'barcode-scanner-runtime-api/std',
     'pallet-timestamp/std',
     'pallet-transaction-payment/std',
     'pallet-transaction-payment-rpc-runtime-api/std',
-    "node-primitives/std",
     'sp-api/std',
     'sp-block-builder/std',
     'sp-consensus-aura/std',
@@ -135,10 +99,5 @@ std = [
     'sp-std/std',
     'sp-transaction-pool/std',
     'sp-version/std',
-    "pallet-im-online/std",
-    "sp-consensus-babe/std",
-    "pallet-authorship/std",
-    "pallet-contracts-primitives/std",
-    "pallet-indices/std",
 
 ]
