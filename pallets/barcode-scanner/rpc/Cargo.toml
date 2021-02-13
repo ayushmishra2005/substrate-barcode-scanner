@@ -22,8 +22,8 @@ jsonrpc-core = "15.1.0"
 jsonrpc-core-client = "15.1.0"
 jsonrpc-derive = "15.1.0"
 barcode-scanner-runtime-api = { path = '../runtime-api', default-features = false, version = '2.0.1' }
-sp-rpc = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-sp-runtime = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-sp-api = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-sp-blockchain = { version = "2.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
+sp-rpc = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
+sp-runtime = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
+sp-api = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
+sp-blockchain = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 

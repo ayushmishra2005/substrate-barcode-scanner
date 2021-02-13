@@ -1,6 +1,6 @@
 [package]
 name = "node-template"
-version = "2.0.0"
+version = "3.0.0"
 authors = ['Ayush Kumar Mishra <https://github.com/ayushmishra2005>']
 description = 'This substrate based blockchain provides scanning of 2D barcode of the product which is tied to a Blockchain system.'
 build = "build.rs"
@@ -30,17 +30,18 @@ sp-blockchain = {git = 'https://github.com/paritytech/substrate.git', branch = "
 sp-block-builder= {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 sp-consensus = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 sp-transaction-pool = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
+sc-consensus-manual-seal = {version = "0.9.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 
 sc-client-api = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
-sc-consensus = {version = "0.8.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
+sc-consensus = {version = "0.9.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 sc-transaction-pool = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
-sc-consensus-aura = {version = "0.8.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
-sc-finality-grandpa = {version = "0.8.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
+sc-consensus-aura = {version = "0.9.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
+sc-finality-grandpa = {version = "0.9.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 sp-finality-grandpa = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
-sc-rpc-api = {version = "0.8.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
+sc-rpc-api = {version = "0.9.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 sc-rpc = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
-sc-basic-authorship = {version = "0.8.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
-sc-service = { version = "0.8.0", git = 'https://github.com/paritytech/substrate.git', branch = "master", features = ["wasmtime"] }
+sc-basic-authorship = {version = "0.9.0", git = 'https://github.com/paritytech/substrate.git', branch = "master"}
+sc-service = { version = "0.9.0", git = 'https://github.com/paritytech/substrate.git', branch = "master", features = ["wasmtime"] }
 sc-telemetry = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 sc-keystore = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 pallet-indices = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
@@ -59,13 +60,13 @@ substrate-frame-rpc-system = {git = 'https://github.com/paritytech/substrate.git
 barcode-scanner-runtime = { version = "2.0.1", path = "../runtime" }
 barcode-scanner-rpc = { path = '../pallets/barcode-scanner/rpc', version = '2.0.1' }
 
-sc-cli = { version = "0.8.0", git = 'https://github.com/paritytech/substrate.git', branch = "master", features = ["wasmtime"] }
-sc-executor = { version = "0.8.0", git = 'https://github.com/paritytech/substrate.git', branch = "master", features = ["wasmtime"] }
-frame-benchmarking = { version = "2.0.0", git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-frame-benchmarking-cli = { version = "2.0.0", git = 'https://github.com/paritytech/substrate.git', branch = "master" }
+sc-cli = { version = "0.9.0", git = 'https://github.com/paritytech/substrate.git', branch = "master", features = ["wasmtime"] }
+sc-executor = { version = "0.9.0", git = 'https://github.com/paritytech/substrate.git', branch = "master", features = ["wasmtime"] }
+frame-benchmarking = { version = "3.0.0", git = 'https://github.com/paritytech/substrate.git', branch = "master" }
+frame-benchmarking-cli = { version = "3.0.0", git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 jsonrpc-core = "15.1.0"
 [build-dependencies]
-substrate-build-script-utils = { version = "2.0.0", git = 'https://github.com/paritytech/substrate.git', branch = "master" }
+substrate-build-script-utils = { version = "3.0.0", git = 'https://github.com/paritytech/substrate.git', branch = "master" }
 
 [features]
 default = []
