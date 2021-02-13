@@ -31,13 +31,13 @@ fn verify_barcode_scanner_for_fake_product() {
 	});
 }
 
-fn create_hash_data(data: &u32) -> <mock::Test as frame_system::Trait>::Hash {
-	data.using_encoded(<Test as frame_system::Trait>::Hashing::hash)
+fn create_hash_data(data: &u32) -> <mock::Test as frame_system::Config>::Hash {
+	data.using_encoded(<Test as frame_system::Config>::Hashing::hash)
 }
 
 fn create_test_product() -> Product<
-	<mock::Test as frame_system::Trait>::AccountId,
-	<mock::Test as frame_system::Trait>::Hash,
+	<mock::Test as frame_system::Config>::AccountId,
+	<mock::Test as frame_system::Config>::Hash,
 > {
 	let id = create_hash_data(&2u32);
 	let owner: u64 = 6;
