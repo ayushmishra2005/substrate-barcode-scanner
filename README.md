@@ -59,7 +59,13 @@ Purge the development chain's state:
 ```bash
 ./target/release/node-template purge-chain --dev
 ```
+### Run with Instant-Seal consensus
 
+If you want to avoid creating empty blocks and allow only when a new transaction arrives, you can run below command.
+
+```bash
+./target/release/node-template --dev --instant-sealing
+```
 ### How to add product and verify barcode
 
 * After executing `make run`, Use this link to open the Polkadot JS Apps UI `https://polkadot.js.org/apps/#/explorer?rpc=ws://127.0.0.1:9944`
