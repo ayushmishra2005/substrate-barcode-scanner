@@ -20,7 +20,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 structopt = "0.3.8"
-
+sp-timestamp = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 sp-consensus-aura = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 sp-core = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
 sp-runtime = {git = 'https://github.com/paritytech/substrate.git', branch = "master"}
