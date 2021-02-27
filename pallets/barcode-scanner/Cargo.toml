@@ -19,15 +19,14 @@ version = '2.0.0'
 
 [dependencies]
 serde = { version = "1.0.101", default-features = false, features = ["derive"], optional = true }
-frame-support = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-frame-system = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-sp-runtime = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-sp-std = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-frame-benchmarking = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master", optional = true }
+frame-support = { version = "3.0.0", default-features = false }
+frame-system = { version = "3.0.0", default-features = false }
+sp-runtime = { version = "3.0.0", default-features = false }
+sp-std = { version = "3.0.0", default-features = false }
+frame-benchmarking = { version = "3.0.0", default-features = false, optional = true }
 
 [dev-dependencies]
-sp-core = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
-sp-io = { version = "3.0.0", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "master" }
+sp-core = { version = "3.0.0", default-features = false }
 
 [features]
 default = ['std']
