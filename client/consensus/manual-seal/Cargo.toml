@@ -1,0 +1,49 @@
+[package]
+name = "sc-consensus-manual-seal"
+version = "0.9.0"
+authors = ["Parity Technologies <admin@parity.io>"]
+description = "Manual sealing engine for Substrate"
+edition = "2018"
+license = "GPL-3.0-or-later WITH Classpath-exception-2.0"
+homepage = "https://substrate.dev"
+repository = "https://github.com/paritytech/substrate/"
+readme = "README.md"
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[dependencies]
+derive_more = "0.99.11"
+futures = "0.3.4"
+futures-timer = "3.0.2"
+jsonrpc-core = "15.0.0"
+jsonrpc-core-client = "15.0.0"
+jsonrpc-derive = "15.0.0"
+log = "0.4.8"
+parking_lot = "0.11.1"
+serde = { version = "1.0.123", features=["derive"] }
+assert_matches = "1.5.0"
+
+sc-client-api = "3.0.0"
+sc-consensus-babe = "0.9.0"
+sc-consensus-epochs = "0.9.0"
+sp-consensus-babe = "0.9.0"
+
+sc-transaction-pool = "3.0.0"
+sp-blockchain = "3.0.0"
+sp-consensus = { package = "sp-consensus", version = "0.9.0" }
+sp-inherents = "3.0.0"
+sp-runtime = "3.0.0"
+sp-core = "3.0.0"
+sp-keystore = "0.9.0"
+sp-api = "3.0.0"
+sp-transaction-pool = "3.0.0"
+sp-timestamp = "3.0.0"
+
+prometheus-endpoint = { package = "substrate-prometheus-endpoint", version = "0.9.0" }
+
+[dev-dependencies]
+tokio = { version = "0.2", features = ["rt-core", "macros"] }
+sc-basic-authorship = "0.9.0"
+
+tempfile = "3.1.0"

@@ -217,6 +217,9 @@ pub fn new_full(
 					select_chain,
 					consensus_data_provider: None,
 					inherent_data_providers: inherent_data_providers.clone(),
+					heartbeat: None,
+					cooldown: None,
+					finalize: true
 				});
 			// we spawn the future on a background thread managed by service.
 			task_manager
