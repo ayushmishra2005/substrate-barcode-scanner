@@ -19,15 +19,15 @@ version = '2.0.0'
 
 [dependencies]
 serde = { version = "1.0.101", default-features = false, features = ["derive"], optional = true }
-frame-support = { version = "3.0.0", default-features = false }
-frame-system = { version = "3.0.0", default-features = false }
-sp-runtime = { version = "3.0.0", default-features = false }
-sp-std = { version = "3.0.0", default-features = false }
-frame-benchmarking = { version = "3.0.0", default-features = false, optional = true }
-sp-io = {  version = '3.0.0',default-features = false }
+frame-support = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
+frame-system = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
+sp-runtime = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
+sp-std = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
+frame-benchmarking = { version = "3.0.0", default-features = false, optional = true , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
+sp-io = {  version = '3.0.0',default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
 
 [dev-dependencies]
-sp-core = { version = "3.0.0", default-features = false }
+sp-core = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
 
 [features]
 default = ['std']
