@@ -12,6 +12,8 @@ use sp_consensus_aura::sr25519::{AuthorityPair as AuraPair};
 use sc_finality_grandpa::SharedVoterState;
 use sc_keystore::LocalKeystore;
 use sc_consensus_manual_seal::InstantSealParams;
+use sp_consensus::DefaultImportQueue;
+use proc_macro::bridge::client::Client;
 
 mod mock_timestamp_data_provider;
 // Our native executor instance.
@@ -51,8 +53,17 @@ pub fn new_partial(
 	let inherent_data_providers = sp_inherents::InherentDataProviders::new();
 
 	let (client, backend, keystore_container, task_manager) =
-		sc_service::new_full_parts::<Block, RuntimeApi, Executor>(&config)?;
+		sc_service::new_full_parts::<Block, RuntimeApi, Executor>(
+			&config,
+			telemetry.as_ref().map(|(_, telemetry)| telemetry.handle()),
+		)?;
 	let client = Arc::new(client);
+
+	let telemetry = telemetry
+		.map(|(worker, telemetry)| {
+			task_manager.spawn_handle().spawn("telemetry", worker.run());
+			telemetry
+		});
 
 	let select_chain = sc_consensus::LongestChain::new(backend.clone());
 
@@ -65,7 +76,10 @@ pub fn new_partial(
 	);
 
 	let (grandpa_block_import, grandpa_link) = sc_finality_grandpa::block_import(
-		client.clone(), &(client.clone() as Arc<_>), select_chain.clone(),
+		client.clone(),
+		&(client.clone() as Arc<_>),
+		select_chain.clone(),
+		telemetry.as_ref().map(|x| x.handle()),
 	)?;
 
 	let aura_block_import = sc_consensus_aura::AuraBlockImport::<_, _, _, AuraPair>::new(
@@ -78,21 +92,27 @@ pub fn new_partial(
 			.map_err(Into::into)
 			.map_err(sp_consensus::error::Error::InherentData)?;
 
-		sc_consensus_manual_seal::import_queue(
+		let d: DefaultImportQueue<Block, Client> = sc_consensus_manual_seal::import_queue(
 			Box::new(client.clone()),
 			&task_manager.spawn_handle(),
 			config.prometheus_registry(),
-		)
+		);
+
+		d
 	} else {
-		sc_consensus_aura::import_queue::<_, _, _, AuraPair, _, _>(
-			sc_consensus_aura::slot_duration(&*client)?,
-			aura_block_import.clone(),
-			Some(Box::new(grandpa_block_import.clone())),
-			client.clone(),
-			inherent_data_providers.clone(),
-			&task_manager.spawn_handle(),
-			config.prometheus_registry(),
-			sp_consensus::CanAuthorWithNativeVersion::new(client.executor().clone()),
+		sc_consensus_aura::import_queue::<AuraPair, _, _, _, _, _>(
+			ImportQueueParams {
+				block_import: aura_block_import.clone(),
+				justification_import: Some(Box::new(grandpa_block_import.clone())),
+				client: client.clone(),
+				inherent_data_providers: inherent_data_providers.clone(),
+				spawner: &task_manager.spawn_essential_handle(),
+				can_author_with: sp_consensus::CanAuthorWithNativeVersion::new(client.executor().clone()),
+				slot_duration: sc_consensus_aura::slot_duration(&*client)?,
+				registry: config.prometheus_registry(),
+				check_for_equivocation: Default::default(),
+				telemetry: telemetry.as_ref().map(|x| x.handle()),
+			},
 		)?
 	};
 
@@ -105,7 +125,7 @@ pub fn new_partial(
 		select_chain,
 		transaction_pool,
 		inherent_data_providers,
-		other: (aura_block_import, grandpa_link),
+		other: (aura_block_import, grandpa_link, telemetry),
 	})
 }
 
