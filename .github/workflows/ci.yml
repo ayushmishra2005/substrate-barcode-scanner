@@ -27,4 +27,4 @@ jobs:
 
       - name: Check Build
         run: |
-          cargo build --release
+          SKIP_WASM_BUILD= cargo build --release
