@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    if: github.repository == 'ayushmishra2005/substrate-barcode-scanner'
+    name: Auto Build CI
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        rust: [stable]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        
+      - name: Install Rust toolchain ${{ matrix.rust }}
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          components: rustfmt, clippy
+          override: true
+
+      - name: Install wasm32-unknown-unknown for ${{ matrix.rust }}
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          target: wasm32-unknown-unknown
+          override: true
+
+      - name: Check Build
+        run: |
+          cargo build --release
