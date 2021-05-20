@@ -25,6 +25,19 @@ jobs:
           default: true
           components: rustfmt, clippy
 
-      - name: Check Build
+       
+      - name: Check Benchmarking
         run: |
-          SKIP_WASM_BUILD= cargo build --release
+          cargo build --release --features runtime-benchmarks
+          
+      - name: Update Weights
+        run: |
+          ./target/release/node-template benchmark --chain=dev --execution=wasm --wasm-execution=compiled --pallet=pallet_barcode_scanner --extrinsic='*' --steps=50 --repeat=20 --heap-pages=4096 --template=./frame-weight-template.hbs --output=./pallets/barcode-scanner/src/weights.rs
+
+          
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          default_author: github_actor
+          message: 'Your commit message'
+          add: '*.rs'
