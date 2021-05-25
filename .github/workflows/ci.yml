@@ -1,5 +1,6 @@
 name: CI
 
+
 on:
   push:
     branches: [ master ]
@@ -26,20 +27,32 @@ jobs:
           override: true
           default: true
           components: rustfmt, clippy
-
-       
-      - name: Check Benchmarking
-        run: |
-          cargo build --release --features runtime-benchmarks
           
-      - name: Update Weights
-        run: |
-          ./target/release/node-template benchmark --chain=dev --execution=wasm --wasm-execution=compiled --pallet=pallet_barcode_scanner --extrinsic='*' --steps=50 --repeat=20 --heap-pages=4096 --template=./frame-weight-template.hbs --output=./pallets/barcode-scanner/src/weights.rs
+#       - name: Check Test
+#         run: |
+#           cargo test
+
+#       - name: Create comment
+#         if: steps.fc.outputs.comment-id == ''
+#         uses: peter-evans/create-or-update-comment@v1
+#         with:
+#           issue-number: ${{ github.event.pull_request.number }}
+#           body: |
+#             /benchmark runtime substrate pallet_barcode_scanner
+#           reactions: rocket
         
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v7
-        with:
-          author_name: ayushmishra2005
-          author_email: ayushmishra2005@gmail.com
-          message: 'Updated weights'
-          add: '*.rs'
+#       - name: Check Benchmarking
+#         run: |
+#           cargo build --release --features runtime-benchmarks
+          
+#       - name: Update Weights
+#         run: |
+#           ./target/release/node-template benchmark --chain=dev --execution=wasm --wasm-execution=compiled --pallet=pallet_barcode_scanner --extrinsic='*' --steps=50 --repeat=20 --heap-pages=4096 --template=./frame-weight-template.hbs --output=./pallets/barcode-scanner/src/weights.rs
+        
+#       - name: Commit changes
+#         uses: EndBug/add-and-commit@v7
+#         with:
+#           author_name: ayushmishra2005
+#           author_email: ayushmishra2005@gmail.com
+#           message: 'Updated weights'
+#           add: '*.rs'
