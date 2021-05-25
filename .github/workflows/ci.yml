@@ -32,14 +32,14 @@ jobs:
 #         run: |
 #           cargo test
 
-      - name: Create comment
-        if: steps.fc.outputs.comment-id == ''
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            /benchmark runtime substrate pallet_barcode_scanner
-          reactions: rocket
+#       - name: Create comment
+#         if: steps.fc.outputs.comment-id == ''
+#         uses: peter-evans/create-or-update-comment@v1
+#         with:
+#           issue-number: ${{ github.event.pull_request.number }}
+#           body: |
+#             /benchmark runtime substrate pallet_barcode_scanner
+#           reactions: rocket
         
 #       - name: Check Benchmarking
 #         run: |
