@@ -28,9 +28,9 @@ jobs:
           default: true
           components: rustfmt, clippy
           
-#       - name: Check Test
-#         run: |
-#           cargo test
+      - name: Check Test
+        run: |
+          cargo test
 
 #       - name: Create comment
 #         if: steps.fc.outputs.comment-id == ''
