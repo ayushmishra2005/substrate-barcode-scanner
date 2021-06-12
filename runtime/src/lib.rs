@@ -304,18 +304,18 @@ impl pallet_sudo::Config for Runtime {
 /// Configure the template pallet in pallets/template.
 impl pallet_barcode_scanner::Config for Runtime {
 	type Event = Event;
-	type ManufactureOrigin = frame_system::EnsureSigned<AccountId>;
+	type ManufactureOrigin = EnsureRootOrHalfCouncil;
 	type WeightInfo = pallet_barcode_scanner::weights::SubstrateWeight<Runtime>;
 }
 
 parameter_types! {
-    pub const LaunchPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
-	pub const VotingPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
-	pub const FastTrackVotingPeriod: BlockNumber = 3 * 24 * 60 * MINUTES;
+    pub const LaunchPeriod: BlockNumber = 30;
+	pub const VotingPeriod: BlockNumber = 30;
+	pub const FastTrackVotingPeriod: BlockNumber = 20;
 	pub const InstantAllowed: bool = true;
 	pub const MinimumDeposit: Balance = 100 * DOLLARS;
-	pub const EnactmentPeriod: BlockNumber = 30 * 24 * 60 * MINUTES;
-	pub const CooloffPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
+	pub const EnactmentPeriod: BlockNumber = 40;
+	pub const CooloffPeriod: BlockNumber = 30;
 	// One cent: $10,000 / MB
 	pub const PreimageByteDeposit: Balance = 1 * CENTS;
 	pub const MaxVotes: u32 = 100;
@@ -374,7 +374,7 @@ impl pallet_democracy::Config for Runtime {
 }
 
 parameter_types! {
-    pub const CouncilMotionDuration: BlockNumber = 5 * DAYS;
+    pub const CouncilMotionDuration: BlockNumber = 30;
     pub const CouncilMaxProposals: u32 = 100;
     pub const CouncilMaxMembers: u32 = 100;
 }
@@ -393,14 +393,15 @@ impl pallet_collective::Config<CouncilCollective> for Runtime {
 }
 
 parameter_types! {
-    pub const CandidacyBond: Balance = 10 * DOLLARS;
+    pub const CandidacyBond: Balance = 5 * DOLLARS; // modified for demo
     // 1 storage item created, key size is 32 bytes, value size is 16+16.
-    pub const VotingBondBase: Balance = deposit(1, 64);
+    pub const VotingBondBase: Balance = 1 * DOLLARS; 	// modified for demo
     // additional data per vote is 32 bytes (account id).
     pub const VotingBondFactor: Balance = deposit(0, 32);
+	/// Council elections every week. Their job is to approve treasury spends.
     pub const TermDuration: BlockNumber = 7 * DAYS;
-    pub const DesiredMembers: u32 = 13;
-    pub const DesiredRunnersUp: u32 = 7;
+    pub const DesiredMembers: u32 = 3;
+    pub const DesiredRunnersUp: u32 = 3;
     pub const ElectionsPhragmenPalletId: LockIdentifier = *b"phrelect";
 }
 
@@ -428,7 +429,7 @@ impl pallet_elections_phragmen::Config for Runtime {
 }
 
 parameter_types! {
-    pub const TechnicalMotionDuration: BlockNumber = 5 * DAYS;
+    pub const TechnicalMotionDuration: BlockNumber = 30;
     pub const TechnicalMaxProposals: u32 = 100;
     pub const TechnicalMaxMembers: u32 = 100;
 }
@@ -468,7 +469,7 @@ impl pallet_membership::Config<pallet_membership::Instance1> for Runtime {
 parameter_types! {
     pub MaximumSchedulerWeight: Weight = Perbill::from_percent(80) *
         RuntimeBlockWeights::get().max_block;
-    pub const MaxScheduledPerBlock: u32 = 50;
+    pub const MaxScheduledPerBlock: u32 = 30;
 }
 
 impl pallet_scheduler::Config for Runtime {
@@ -485,8 +486,8 @@ impl pallet_scheduler::Config for Runtime {
 parameter_types! {
     pub const ProposalBond: Permill = Permill::from_percent(5);
     pub const ProposalBondMinimum: Balance = 1 * DOLLARS;
-    pub const SpendPeriod: BlockNumber = 1 * DAYS;
-    pub const Burn: Permill = Permill::from_percent(50);
+    pub const SpendPeriod: BlockNumber = 20;
+    pub const Burn: Permill = Permill::from_percent(1);
     pub const TipCountdown: BlockNumber = 1 * DAYS;
     pub const TipFindersFee: Percent = Percent::from_percent(20);
     pub const TipReportDepositBase: Balance = 1 * DOLLARS;
@@ -494,21 +495,21 @@ parameter_types! {
     pub const MaxApprovals: u32 = 100;
 }
 
+// Approve different origins
+// Notice ratios for EnsureProportionAtLeast: 2/3
+type ApproveOrigin = frame_system::EnsureOneOf<
+	AccountId,
+	EnsureRoot<AccountId>,
+	pallet_collective::EnsureProportionAtLeast<_2, _3, AccountId, CouncilCollective>
+>;
+
 impl pallet_treasury::Config for Runtime {
 	type PalletId = TreasuryPalletId;
 	type Currency = Balances;
-	type ApproveOrigin = EnsureOneOf<
-		AccountId,
-		EnsureRoot<AccountId>,
-		pallet_collective::EnsureProportionAtLeast<_3, _5, AccountId, CouncilCollective>,
-	>;
-	type RejectOrigin = EnsureOneOf<
-		AccountId,
-		EnsureRoot<AccountId>,
-		pallet_collective::EnsureProportionMoreThan<_1, _2, AccountId, CouncilCollective>,
-	>;
+	type ApproveOrigin = ApproveOrigin;
+	type RejectOrigin =ApproveOrigin;
 	type Event = Event;
-	type OnSlash = ();
+	type OnSlash = Treasury;
 	type ProposalBond = ProposalBond;
 	type ProposalBondMinimum = ProposalBondMinimum;
 	type SpendPeriod = SpendPeriod;
