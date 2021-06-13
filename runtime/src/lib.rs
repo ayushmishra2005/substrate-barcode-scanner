@@ -309,13 +309,13 @@ impl pallet_barcode_scanner::Config for Runtime {
 }
 
 parameter_types! {
-    pub const LaunchPeriod: BlockNumber = 30;
-	pub const VotingPeriod: BlockNumber = 30;
+    pub const LaunchPeriod: BlockNumber = 50;
+	pub const VotingPeriod: BlockNumber = 50;
 	pub const FastTrackVotingPeriod: BlockNumber = 20;
 	pub const InstantAllowed: bool = true;
 	pub const MinimumDeposit: Balance = 100 * DOLLARS;
-	pub const EnactmentPeriod: BlockNumber = 40;
-	pub const CooloffPeriod: BlockNumber = 30;
+	pub const EnactmentPeriod: BlockNumber = 50;
+	pub const CooloffPeriod: BlockNumber = 50;
 	// One cent: $10,000 / MB
 	pub const PreimageByteDeposit: Balance = 1 * CENTS;
 	pub const MaxVotes: u32 = 100;
@@ -374,7 +374,7 @@ impl pallet_democracy::Config for Runtime {
 }
 
 parameter_types! {
-    pub const CouncilMotionDuration: BlockNumber = 30;
+    pub const CouncilMotionDuration: BlockNumber = 50;
     pub const CouncilMaxProposals: u32 = 100;
     pub const CouncilMaxMembers: u32 = 100;
 }
@@ -429,7 +429,7 @@ impl pallet_elections_phragmen::Config for Runtime {
 }
 
 parameter_types! {
-    pub const TechnicalMotionDuration: BlockNumber = 30;
+    pub const TechnicalMotionDuration: BlockNumber = 50;
     pub const TechnicalMaxProposals: u32 = 100;
     pub const TechnicalMaxMembers: u32 = 100;
 }
@@ -469,7 +469,7 @@ impl pallet_membership::Config<pallet_membership::Instance1> for Runtime {
 parameter_types! {
     pub MaximumSchedulerWeight: Weight = Perbill::from_percent(80) *
         RuntimeBlockWeights::get().max_block;
-    pub const MaxScheduledPerBlock: u32 = 30;
+    pub const MaxScheduledPerBlock: u32 = 50;
 }
 
 impl pallet_scheduler::Config for Runtime {
@@ -486,7 +486,7 @@ impl pallet_scheduler::Config for Runtime {
 parameter_types! {
     pub const ProposalBond: Permill = Permill::from_percent(5);
     pub const ProposalBondMinimum: Balance = 1 * DOLLARS;
-    pub const SpendPeriod: BlockNumber = 20;
+    pub const SpendPeriod: BlockNumber = 50;
     pub const Burn: Permill = Permill::from_percent(1);
     pub const TipCountdown: BlockNumber = 1 * DAYS;
     pub const TipFindersFee: Percent = Percent::from_percent(20);
