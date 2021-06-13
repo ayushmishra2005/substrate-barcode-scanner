@@ -1,7 +1,7 @@
 use barcode_scanner_runtime::{
     AccountId, AuraConfig, BalancesConfig, GenesisConfig, GrandpaConfig, Signature, SudoConfig,
-    SystemConfig, WASM_BINARY, DOLLARS, CouncilConfig, DemocracyConfig, ElectionsConfig,
-	TechnicalCommitteeConfig, Balance
+    SystemConfig, WASM_BINARY, CouncilConfig, DemocracyConfig, ElectionsConfig,
+	TechnicalCommitteeConfig,
 };
 use sc_service::ChainType;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
@@ -109,6 +109,8 @@ pub fn local_testnet_config() -> Result<ChainSpec, String> {
                     get_account_id_from_seed::<sr25519::Public>("Dave//stash"),
                     get_account_id_from_seed::<sr25519::Public>("Eve//stash"),
                     get_account_id_from_seed::<sr25519::Public>("Ferdie//stash"),
+					// add prefunded Treasury
+					hex_literal::hex!("6d6f646c70792f74727372790000000000000000000000000000000000000000").into(),
                 ],
                 true,
             )
@@ -135,8 +137,7 @@ fn testnet_genesis(
     _enable_println: bool,
 ) -> GenesisConfig {
 	let num_endowed_accounts = endowed_accounts.len();
-	const ENDOWMENT: Balance = 10_000_000 * DOLLARS;
-	const STASH: Balance = ENDOWMENT / 1000;
+
     GenesisConfig {
         frame_system: SystemConfig {
             // Add Wasm runtime to storage.
@@ -165,15 +166,16 @@ fn testnet_genesis(
             key: root_key,
         },
 		pallet_democracy: DemocracyConfig::default(),
-		pallet_elections_phragmen: ElectionsConfig {
-			members: endowed_accounts
-				.iter()
-				.take((num_endowed_accounts + 1) / 2)
-				.cloned()
-				.map(|member| (member, STASH))
-				.collect(),
+		pallet_elections_phragmen: ElectionsConfig::default(),
+		pallet_collective_Instance1: CouncilConfig {
+			members: vec![
+				// add Alice and Bob as initial council members
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
+				get_account_id_from_seed::<sr25519::Public>("Bob"),
+				get_account_id_from_seed::<sr25519::Public>("Charlie"),
+			],
+			phantom: Default::default(),
 		},
-		pallet_collective_Instance1: CouncilConfig::default(),
 		pallet_collective_Instance2: TechnicalCommitteeConfig {
 			members: endowed_accounts
 				.iter()
