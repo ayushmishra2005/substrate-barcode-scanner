@@ -88,3 +88,9 @@ You will get below response.
 ### Run Benchmarking
 Run `make benchmark` command and execute
 ./target/release/node-template benchmark --chain=dev --execution=wasm --wasm-execution=compiled --pallet=pallet_barcode_scanner --extrinsic='*' --steps=50 --repeat=20 --heap-pages=4096 --template=./frame-weight-template.hbs --output=./pallets/barcode-scanner/src/weights.rs
+
+
+### Governance Demo
+For Governance, please refer to this branch [governance_integration](https://github.com/ayushmishra2005/substrate-barcode-scanner/tree/governance_integration)
+
+
