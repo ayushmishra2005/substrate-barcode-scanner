@@ -1,3 +1,11 @@
+
+### Governance Demo
+For Governance, please refer to this branch [governance_integration](https://github.com/ayushmishra2005/substrate-barcode-scanner/tree/governance_integration)
+
+### Substrate Storage Migration Demo
+For Substrate Storage Migration, please refer to this branch [Substrate Storage Migration](https://github.com/ayushmishra2005/substrate-barcode-scanner/tree/substarte_storage_migration)
+
+
 # Substrate based Product Barcode Scanner
 
 This substrate based pallet scans 2D barcode of the product which is tied to a Blockchain system.
@@ -89,12 +97,6 @@ You will get below response.
 Run `make benchmark` command and execute
 ./target/release/node-template benchmark --chain=dev --execution=wasm --wasm-execution=compiled --pallet=pallet_barcode_scanner --extrinsic='*' --steps=50 --repeat=20 --heap-pages=4096 --template=./frame-weight-template.hbs --output=./pallets/barcode-scanner/src/weights.rs
 
-
-### Governance Demo
-For Governance, please refer to this branch [governance_integration](https://github.com/ayushmishra2005/substrate-barcode-scanner/tree/governance_integration)
-
-### Substrate Storage Migration Demo
-For Substrate Storage Migration, please refer to this branch [Substrate Storage Migration](https://github.com/ayushmishra2005/substrate-barcode-scanner/tree/substarte_storage_migration)
 
 
 
