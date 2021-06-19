@@ -28,7 +28,7 @@ jobs:
           default: true
           components: rustfmt, clippy
           
-      - name: Check Test
+      - name: Check Test 
         run: |
           cargo test
 
