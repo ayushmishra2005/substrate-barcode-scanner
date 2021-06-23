@@ -17,7 +17,7 @@ use Unix-style terminals to demonstrate how to interact with Substrate from the 
 
 ### macOS
 
-Open the Terminal application and execute the following commands:
+Open the Terminal application and execute the following commands: 
 
 ```bash
 # Install Homebrew if necessary https://brew.sh/
