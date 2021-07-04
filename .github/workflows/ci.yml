@@ -1,36 +1,36 @@
-name: CI
+# name: CI
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+# on:
+#   push:
+#     branches: [ master ]
+#   pull_request:
+#     branches: [ master ]
 
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    if: github.repository == 'ayushmishra2005/substrate-barcode-scanner'
-    name: Auto Build CI
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     if: github.repository == 'ayushmishra2005/substrate-barcode-scanner'
+#     name: Auto Build CI
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.SECRET_NAME }}
+#     steps:
+#       - name: Checkout repo
+#         uses: actions/checkout@v2
+#         with:
+#           token: ${{ secrets.SECRET_NAME }}
         
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          target: wasm32-unknown-unknown
-          override: true
-          default: true
-          components: rustfmt, clippy
+#       - name: Install toolchain
+#         uses: actions-rs/toolchain@v1
+#         with:
+#           toolchain: nightly
+#           target: wasm32-unknown-unknown
+#           override: true
+#           default: true
+#           components: rustfmt, clippy
           
-      - name: Check Test
-        run: |
-          cargo test
+#       - name: Check Test
+#         run: |
+#           cargo test
 
 #       - name: Create comment
 #         if: steps.fc.outputs.comment-id == ''
