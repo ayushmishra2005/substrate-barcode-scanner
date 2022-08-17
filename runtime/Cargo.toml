@@ -23,7 +23,6 @@ version = '2.0.0'
 [dependencies]
 hex-literal = { optional = true, version = '0.3.1' }
 serde = { version = "1.0.101", optional = true, features = ["derive"] }
-static_assertions = '1.1.0'
 
 # local dependencies
 pallet-barcode-scanner = { path = '../pallets/barcode-scanner', default-features = false, version = '2.0.1' }
@@ -57,12 +56,6 @@ pallet-timestamp = { version = "3.0.0", default-features = false , git = 'https:
 pallet-transaction-payment = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
 pallet-transaction-payment-rpc-runtime-api = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
 sp-consensus-aura = { version = "0.9.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-pallet-collective  = { git = 'https://github.com/paritytech/substrate.git', version = '3.0.0', branch = 'rococo-v1', default-features = false }
-pallet-democracy  = { git = 'https://github.com/paritytech/substrate.git', version = '3.0.0', branch = 'rococo-v1', default-features = false }
-pallet-elections-phragmen = { git = 'https://github.com/paritytech/substrate.git', version = '4.0.0', branch = 'rococo-v1', default-features = false }
-pallet-membership = { git = 'https://github.com/paritytech/substrate.git', version = '3.0.0', branch = 'rococo-v1', default-features = false }
-pallet-treasury  = { git = 'https://github.com/paritytech/substrate.git', version = '3.0.0', branch = 'rococo-v1', default-features = false }
-pallet-scheduler = { git = 'https://github.com/paritytech/substrate.git', version = '3.0.0', branch = 'rococo-v1', default-features = false }
 
 
 [features]
@@ -106,11 +99,5 @@ std = [
     'sp-std/std',
     'sp-transaction-pool/std',
     'sp-version/std',
-    'pallet-treasury/std',
-    'pallet-collective/std',
-    'pallet-elections-phragmen/std',
-    'pallet-membership/std',
-    'pallet-democracy/std',
-    'pallet-scheduler/std',
 
 ]

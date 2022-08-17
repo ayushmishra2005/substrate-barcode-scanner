@@ -18,7 +18,7 @@ pub use weights::WeightInfo;
 
 pub trait Config: frame_system::Config {
     type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
-    type ManufactureOrigin: EnsureOrigin<Self::Origin>;
+    type ManufactureOrigin: EnsureOrigin<Self::Origin, Success = Self::AccountId>;
     type WeightInfo: WeightInfo;
 }
 
@@ -70,12 +70,10 @@ decl_module! {
         fn deposit_event() = default;
 
         #[weight = T::WeightInfo::add_product()]
-        fn add_product(origin, manufacture: T::AccountId, barcode: T::Hash, name: Vec<u8>, id: T::Hash) -> DispatchResult {
-
-			T::ManufactureOrigin::ensure_origin(origin)?;
+        fn add_product(origin, barcode: T::Hash, name: Vec<u8>, id: T::Hash) -> DispatchResult {
 
             // The dispatch origin of this call must be `ManufactureOrigin`.
-            let sender = manufacture;
+            let sender = T::ManufactureOrigin::ensure_origin(origin)?;
 
             // Verify whether barcode has been created
             ensure!(!ProductInformation::<T>::contains_key(&barcode), Error::<T>::BarcodeAlreadyExists);
