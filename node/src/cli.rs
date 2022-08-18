@@ -1,47 +1,53 @@
 use sc_cli::RunCmd;
-use structopt::StructOpt;
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, clap::Parser)]
 pub struct Cli {
-    #[structopt(subcommand)]
-    pub subcommand: Option<Subcommand>,
+	#[clap(subcommand)]
+	pub subcommand: Option<Subcommand>,
 
-    #[structopt(flatten)]
-    pub run: RunCmd,
-
-    /// Instant block sealing
-    ///
-    /// Can only be used with `--dev`
-    #[structopt(long = "instant-sealing")]
-    pub instant_sealing: bool,
+	#[clap(flatten)]
+	pub run: RunCmd,
 }
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, clap::Subcommand)]
 pub enum Subcommand {
-    /// Key management cli utilities
-    Key(sc_cli::KeySubcommand),
-    /// Build a chain specification.
-    BuildSpec(sc_cli::BuildSpecCmd),
+	/// Key management cli utilities
+	#[clap(subcommand)]
+	Key(sc_cli::KeySubcommand),
 
-    /// Validate blocks.
-    CheckBlock(sc_cli::CheckBlockCmd),
+	/// Build a chain specification.
+	BuildSpec(sc_cli::BuildSpecCmd),
 
-    /// Export blocks.
-    ExportBlocks(sc_cli::ExportBlocksCmd),
+	/// Validate blocks.
+	CheckBlock(sc_cli::CheckBlockCmd),
 
-    /// Export the state of a given block into a chain spec.
-    ExportState(sc_cli::ExportStateCmd),
+	/// Export blocks.
+	ExportBlocks(sc_cli::ExportBlocksCmd),
 
-    /// Import blocks.
-    ImportBlocks(sc_cli::ImportBlocksCmd),
+	/// Export the state of a given block into a chain spec.
+	ExportState(sc_cli::ExportStateCmd),
 
-    /// Remove the whole chain.
-    PurgeChain(sc_cli::PurgeChainCmd),
+	/// Import blocks.
+	ImportBlocks(sc_cli::ImportBlocksCmd),
 
-    /// Revert the chain to a previous state.
-    Revert(sc_cli::RevertCmd),
+	/// Remove the whole chain.
+	PurgeChain(sc_cli::PurgeChainCmd),
 
-    /// The custom benchmark subcommmand benchmarking runtime pallets.
-    #[structopt(name = "benchmark", about = "Benchmark runtime pallets.")]
-    Benchmark(frame_benchmarking_cli::BenchmarkCmd),
+	/// Revert the chain to a previous state.
+	Revert(sc_cli::RevertCmd),
+
+	/// Sub-commands concerned with benchmarking.
+	#[clap(subcommand)]
+	Benchmark(frame_benchmarking_cli::BenchmarkCmd),
+
+	/// Try some command against runtime state.
+	#[cfg(feature = "try-runtime")]
+	TryRuntime(try_runtime_cli::TryRuntimeCmd),
+
+	/// Try some command against runtime state. Note: `try-runtime` feature must be enabled.
+	#[cfg(not(feature = "try-runtime"))]
+	TryRuntime,
+
+	/// Db meta columns information.
+	ChainInfo(sc_cli::ChainInfoCmd),
 }

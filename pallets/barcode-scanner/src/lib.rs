@@ -1,102 +1,100 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+pub use pallet::*;
+
 use codec::{Decode, Encode};
-use frame_support::{
-    decl_error, decl_event, decl_module, decl_storage, ensure, traits::EnsureOrigin,
-};
-use sp_runtime::DispatchResult;
+use scale_info::TypeInfo;
+use sp_runtime::RuntimeDebug;
 use sp_std::vec::Vec;
+use sp_std::convert::TryInto;
 
 #[cfg(test)]
 mod mock;
 
-mod banchmarking;
 #[cfg(test)]
 mod tests;
+
 pub mod weights;
+#[cfg(feature = "runtime-benchmarks")]
+mod banchmarking;
+
 pub use weights::WeightInfo;
 
-pub trait Config: frame_system::Config {
-    type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
-    type ManufactureOrigin: EnsureOrigin<Self::Origin, Success = Self::AccountId>;
-    type WeightInfo: WeightInfo;
-}
-
-#[derive(Encode, Decode, Clone, Default, Eq, PartialEq, Debug)]
+#[derive(Clone, Encode, Decode, RuntimeDebug, TypeInfo)]
 pub struct Product<AccountId, Hash> {
-    id: Hash,
-    name: Vec<u8>,
-    manufacturer: AccountId,
+	id: Hash,
+	name: Vec<u8>,
+	manufacturer: AccountId,
 }
 
-pub type ProductOf<T> =
-    Product<<T as frame_system::Config>::AccountId, <T as frame_system::Config>::Hash>;
+#[frame_support::pallet]
+pub mod pallet {
+	use super::*;
+	use frame_support::pallet_prelude::*;
+	use frame_system::pallet_prelude::*;
 
-decl_storage! {
-    trait Store for Module<T: Config> as BarcodeScanner {
-        ProductInformation get(fn product_information):
-        map hasher(blake2_128_concat) T::Hash => ProductOf<T>;
-    }
+	/// Configure the pallet by specifying the parameters and types on which it depends.
+	#[pallet::config]
+	pub trait Config: frame_system::Config {
+		/// Because this pallet emits events, it depends on the runtime's definition of an event.
+		type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
+		type ManufactureOrigin: EnsureOrigin<Self::Origin>;
+		type WeightInfo: WeightInfo;
+	}
+
+	#[pallet::pallet]
+	#[pallet::generate_store(pub(super) trait Store)]
+	#[pallet::without_storage_info]
+	pub struct Pallet<T>(_);
+
+
+	#[pallet::storage]
+	#[pallet::getter(fn product_information)]
+	pub type ProductInformation<T: Config> = StorageMap<_, Blake2_128Concat, T::Hash, Product<T::AccountId, T::Hash>>;
+
+
+	#[pallet::event]
+	#[pallet::generate_deposit(pub(super) fn deposit_event)]
+	pub enum Event<T: Config> {
+		/// Product information has been shored. [who, hash]
+		ProductInformationStored(T::AccountId, T::Hash),
+	}
+
+	#[pallet::error]
+	pub enum Error<T> {
+		/// This barcode already exists in the chain.
+		BarcodeAlreadyExists,
+	}
+
+	#[pallet::call]
+	impl<T: Config> Pallet<T> {
+
+		#[pallet::weight(T::WeightInfo::add_product())]
+		pub fn add_product(origin: OriginFor<T>, manufacture: T::AccountId, barcode: T::Hash, name: Vec<u8>, id: T::Hash) -> DispatchResult {
+			T::ManufactureOrigin::ensure_origin(origin)?;
+
+			// The dispatch origin of this call must be `ManufactureOrigin`.
+			let sender = manufacture;
+
+			// Verify whether barcode has been created
+			ensure!(!ProductInformation::<T>::contains_key(&barcode), Error::<T>::BarcodeAlreadyExists);
+
+			let product = Product {
+				id,
+				name,
+				manufacturer: sender.clone(),
+			};
+
+			ProductInformation::<T>::insert(&barcode, product);
+			// Emit an event.
+			Self::deposit_event(Event::ProductInformationStored(sender, barcode));
+			Ok(())
+		}
+	}
 }
 
-decl_event!(
-    pub enum Event<T>
-    where
-        Hash = <T as frame_system::Config>::Hash,
-        AccountId = <T as frame_system::Config>::AccountId,
-    {
-        /// Product information has been shored.
-        ProductInformationStored(AccountId, Hash),
-    }
-);
-
-decl_error! {
-    pub enum Error for Module<T: Config> {
-        /// This barcode already exists in the chain.
-        BarcodeAlreadyExists,
-    }
-}
-
-decl_module! {
-    pub struct Module<T: Config> for enum Call
-    where
-        origin: T::Origin,
-
-    {
-        // Errors must be initialized if they are used by the pallet.
-        type Error = Error<T>;
-
-        // Events must be initialized if they are used by the pallet.
-        fn deposit_event() = default;
-
-        #[weight = T::WeightInfo::add_product()]
-        fn add_product(origin, barcode: T::Hash, name: Vec<u8>, id: T::Hash) -> DispatchResult {
-
-            // The dispatch origin of this call must be `ManufactureOrigin`.
-            let sender = T::ManufactureOrigin::ensure_origin(origin)?;
-
-            // Verify whether barcode has been created
-            ensure!(!ProductInformation::<T>::contains_key(&barcode), Error::<T>::BarcodeAlreadyExists);
-
-            let product = Product {
-                id,
-                name,
-                manufacturer: sender.clone(),
-            };
-
-            ProductInformation::<T>::insert(&barcode, product);
-
-            // Emit the event that barcode has been added in chain for a product
-            Self::deposit_event(RawEvent::ProductInformationStored(sender, barcode));
-
-            // Return a successful DispatchResult
-            Ok(())
-        }
-    }
-}
-
-impl<T: Config> Module<T> {
-    pub fn is_valid_barcode(barcode: T::Hash) -> bool {
-        ProductInformation::<T>::contains_key(&barcode)
-    }
+impl<T: Config> Pallet<T> {
+	pub fn is_valid_barcode(barcode: T::Hash) -> bool {
+		ProductInformation::<T>::contains_key(&barcode)
+	}
 }

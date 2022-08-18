@@ -1,103 +1,111 @@
 [package]
-authors = ['Ayush Kumar Mishra <https://github.com/ayushmishra2005>']
-edition = '2018'
-description = 'Substrate based 2D barcode scanner pallet'
-license = 'Unlicense'
-name = 'barcode-scanner-runtime'
-repository = 'https://github.com/ayushmishra2005/substrate-barcode-scanner'
-version = '2.0.1'
+name = "barcode-scanner-runtime"
+version = "4.0.0-dev"
+description = "A fresh FRAME-based Substrate runtime, ready for hacking."
+authors = ["Substrate DevHub <https://github.com/substrate-developer-hub>"]
+homepage = "https://substrate.io/"
+edition = "2021"
+license = "Unlicense"
+publish = false
+repository = "https://github.com/substrate-developer-hub/substrate-node-template/"
 
 [package.metadata.docs.rs]
-targets = ['x86_64-unknown-linux-gnu']
-
-[build-dependencies]
-substrate-wasm-builder = '4.0.0'
-
-# alias "parity-scale-code" to "codec"
-[dependencies.codec]
-default-features = false
-features = ['derive']
-package = 'parity-scale-codec'
-version = '2.0.0'
+targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-hex-literal = { optional = true, version = '0.3.1' }
-serde = { version = "1.0.101", optional = true, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+scale-info = { version = "2.1.1", default-features = false, features = ["derive"] }
 
-# local dependencies
-pallet-barcode-scanner = { path = '../pallets/barcode-scanner', default-features = false, version = '2.0.1' }
-barcode-scanner-runtime-api = { path = '../pallets/barcode-scanner/runtime-api', default-features = false, version = '2.0.1' }
+pallet-aura = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+pallet-balances = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+frame-support = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+pallet-grandpa = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+pallet-randomness-collective-flip = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+pallet-sudo = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+frame-system = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+frame-try-runtime = { version = "0.10.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", optional = true , branch = "polkadot-v0.9.27" }
+pallet-timestamp = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+pallet-transaction-payment = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+frame-executive = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-api = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-block-builder = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-consensus-aura = { version = "0.10.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-core = { version = "6.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-inherents = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-offchain = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-runtime = { version = "6.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-session = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-std = { version = "4.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-transaction-pool = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+sp-version = { version = "5.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
 
-# primitives
-sp-block-builder = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-sp-inherents = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-sp-offchain = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-sp-core = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-sp-std = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-sp-api = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-sp-runtime = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-sp-session = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-sp-transaction-pool = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-sp-version = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
+# Used for the node template's RPCs
+frame-system-rpc-runtime-api = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+pallet-transaction-payment-rpc-runtime-api = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
 
-# Substrate dependencies
-frame-benchmarking = { version = "3.0.0", default-features = false, optional = true , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-frame-executive = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-frame-support = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-frame-system = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-frame-system-benchmarking = { version = "3.0.0", default-features = false, optional = true , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-frame-system-rpc-runtime-api = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-pallet-aura = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-pallet-balances = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-pallet-grandpa = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-pallet-randomness-collective-flip = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-pallet-sudo = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-pallet-timestamp = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-pallet-transaction-payment = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-pallet-transaction-payment-rpc-runtime-api = { version = "3.0.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
-sp-consensus-aura = { version = "0.9.0", default-features = false , git = 'https://github.com/paritytech/substrate.git', branch = 'rococo-v1'}
+# Used for runtime benchmarking
+frame-benchmarking = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", optional = true , branch = "polkadot-v0.9.27" }
+frame-system-benchmarking = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", optional = true , branch = "polkadot-v0.9.27" }
+hex-literal = { version = "0.3.4", optional = true }
 
+# Local Dependencies
+pallet-barcode-scanner = { version = "2.0.1", default-features = false, path = "../pallets/barcode-scanner" }
+
+[build-dependencies]
+substrate-wasm-builder = { version = "5.0.0-dev", git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
 
 [features]
-default = ['std']
-runtime-benchmarks = [
-    'hex-literal',
-    'frame-benchmarking',
-    'frame-support/runtime-benchmarks',
-    'frame-system-benchmarking',
-    'frame-system/runtime-benchmarks',
-    'pallet-balances/runtime-benchmarks',
-    'pallet-timestamp/runtime-benchmarks',
-    'sp-runtime/runtime-benchmarks',
-    'pallet-barcode-scanner/runtime-benchmarks',
-]
+default = ["std"]
 std = [
-    'codec/std',
-    'serde',
-    'frame-executive/std',
-    'frame-support/std',
-    'frame-system/std',
-    'frame-system-rpc-runtime-api/std',
-    'pallet-aura/std',
-    'pallet-balances/std',
-    'pallet-grandpa/std',
-    'pallet-randomness-collective-flip/std',
-    'pallet-sudo/std',
-    'pallet-barcode-scanner/std',
-    'barcode-scanner-runtime-api/std',
-    'pallet-timestamp/std',
-    'pallet-transaction-payment/std',
-    'pallet-transaction-payment-rpc-runtime-api/std',
-    'sp-api/std',
-    'sp-block-builder/std',
-    'sp-consensus-aura/std',
-    'sp-core/std',
-    'sp-inherents/std',
-    'sp-offchain/std',
-    'sp-runtime/std',
-    'sp-session/std',
-    'sp-std/std',
-    'sp-transaction-pool/std',
-    'sp-version/std',
-
+	"codec/std",
+	"scale-info/std",
+	"frame-executive/std",
+	"frame-support/std",
+	"frame-system-rpc-runtime-api/std",
+	"frame-system/std",
+	"pallet-aura/std",
+	"pallet-balances/std",
+	"pallet-grandpa/std",
+	"pallet-randomness-collective-flip/std",
+	"pallet-sudo/std",
+	"pallet-barcode-scanner/std",
+	"pallet-timestamp/std",
+	"pallet-transaction-payment-rpc-runtime-api/std",
+	"pallet-transaction-payment/std",
+	"sp-api/std",
+	"sp-block-builder/std",
+	"sp-consensus-aura/std",
+	"sp-core/std",
+	"sp-inherents/std",
+	"sp-offchain/std",
+	"sp-runtime/std",
+	"sp-session/std",
+	"sp-std/std",
+	"sp-transaction-pool/std",
+	"sp-version/std",
+]
+runtime-benchmarks = [
+	"frame-benchmarking/runtime-benchmarks",
+	"frame-support/runtime-benchmarks",
+	"frame-system-benchmarking",
+	"frame-system/runtime-benchmarks",
+	"hex-literal",
+	"pallet-balances/runtime-benchmarks",
+	"pallet-grandpa/runtime-benchmarks",
+	"pallet-barcode-scanner/runtime-benchmarks",
+	"pallet-timestamp/runtime-benchmarks",
+	"sp-runtime/runtime-benchmarks",
+]
+try-runtime = [
+	"frame-executive/try-runtime",
+	"frame-try-runtime",
+	"frame-system/try-runtime",
+	"pallet-aura/try-runtime",
+	"pallet-balances/try-runtime",
+	"pallet-grandpa/try-runtime",
+	"pallet-randomness-collective-flip/try-runtime",
+	"pallet-sudo/try-runtime",
+	"pallet-barcode-scanner/try-runtime",
+	"pallet-timestamp/try-runtime",
+	"pallet-transaction-payment/try-runtime",
 ]

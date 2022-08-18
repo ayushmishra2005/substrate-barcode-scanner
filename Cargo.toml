@@ -1,10 +1,8 @@
-[profile.release]
-panic = 'unwind'
-
 [workspace]
 members = [
-    'node',
-    'pallets/*',
-    'runtime',
-    'client/consensus/manual-seal'
+    "node",
+    "pallets/barcode-scanner",
+    "runtime",
 ]
+[profile.release]
+panic = "unwind"

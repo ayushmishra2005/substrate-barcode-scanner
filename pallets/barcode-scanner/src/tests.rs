@@ -10,9 +10,9 @@ fn check_product_storage() {
     new_test_ext().execute_with(|| {
         let barcode = create_hash_data(&1u32);
         let id = create_hash_data(&2u32);
-        let owner: u64 = 6;
-        assert_ok!(TemplateModule::add_product(
-            Origin::signed(owner),
+        assert_ok!(BarcodeScanner::add_product(
+            Origin::root(),
+			7,
             barcode.clone(),
             "TEST".encode(),
             id
@@ -25,7 +25,7 @@ fn verify_barcode_scanner_for_fake_product() {
     new_test_ext().execute_with(|| {
         create_test_product();
         assert_eq!(
-            TemplateModule::is_valid_barcode(create_hash_data(&2u32)),
+            BarcodeScanner::is_valid_barcode(create_hash_data(&2u32)),
             false
         );
     });
